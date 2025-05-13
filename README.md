@@ -71,7 +71,7 @@ pip install -r requirements.txt
 ### Steps:
 1. Clone the repository:
    ```bash
-   git clone https://github.com/crazyscriptright/utility-billing-system.git
+   https://github.com/crazyscriptright/Utility_billing.git
    cd utility-billing-system
 
 2. Install dependencies:
