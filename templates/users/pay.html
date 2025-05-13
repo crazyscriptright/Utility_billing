@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Govt. Utility Bill Payment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            const billType = "{{ bill_type }}";
+            const billId = "{{ bill_id }}";
+    
+            if (!billId || !billType) {
+                alert("Invalid Bill ID or Type");
+                return;
+            }
+    
+            const endpoint = billType === "water" ? "/api/get-payment-status" : "/api/get-electricity-status";
+    
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ [billType === "water" ? "water_id" : "current_id"]: billId })
+                });
+    
+                const data = await response.json();
+                if (!response.ok) {
+                    alert(data.detail || "Error fetching bill details");
+                    return;
+                }
+    
+                document.getElementById("amount").innerText = `Amount to be paid: ₹${data.amount}`;
+                document.getElementById("payButton").setAttribute("data-amount", data.amount * 100);
+                document.getElementById("payButton").setAttribute("data-bill-id", billId);
+                document.getElementById("payButton").setAttribute("data-bill-type", billType);
+            } catch (error) {
+                console.error("❌ Error fetching amount:", error);
+                alert("Failed to fetch bill amount. Try again!");
+            }
+        });
+    
+        async function initiatePayment() {
+            const payButton = document.getElementById("payButton");
+            const amount = payButton.getAttribute("data-amount");
+            const billId = payButton.getAttribute("data-bill-id");
+            const billType = payButton.getAttribute("data-bill-type");
+    
+            if (!amount || amount == "0") {
+                alert("Please fetch the amount first.");
+                return;
+            }
+    
+            try {
+                const response = await fetch('/api/create_order/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: amount / 100, userid: 1 }) 
+                });
+    
+                const data = await response.json();
+                
+                if (!data.success) {
+                    alert('Error while creating order. Please try again.');
+                    return;
+                }
+                
+                var options = {
+                    "key": "rzp_test_h04Bl246oUFKfS",
+                    "amount": data.amount,
+                    "currency": data.currency,
+                    "order_id": data.order_id,
+                    "name": "Govt. Utility Portal",
+                    "description": `${billType} Bill Payment`,
+                    "theme": { "color": "#1D4ED8" },
+                    "handler": function (response) {
+                        fetch('/api/verify_payment/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_signature: response.razorpay_signature,
+                                amount: amount / 100,
+                                userid: 1,
+                                bill_id: billId,
+                                bill_type: billType
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(result => {
+                            alert(result.message); // Show payment success message
+                            
+                            // Redirect to home page after success
+                            setTimeout(() => {
+                                window.location.href = "/";
+                            }, 2000);
+                        })
+                        .catch(error => {
+                            console.error("❌ Payment verification failed:", error);
+                            alert('Payment verification failed!');
+                            
+                            // Redirect back to the same page on failure
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
+                        });
+                    }
+                };
+                
+                const rzp1 = new Razorpay(options);
+                rzp1.open();
+            } catch (error) {
+                console.error("❌ Error initiating payment:", error);
+                alert('Something went wrong! Try again later.');
+                
+                // Redirect back to the same page on failure
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            }
+        }
+    </script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const url = new URL(window.location);
+            url.search = "";  // Remove query parameters
+            window.history.replaceState({}, document.title, url);
+        });
+    </script>
+    
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-lg bg-white shadow-lg rounded-lg p-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-blue-900">Utility Bill Payment</h2>
+        </div>
+
+        <div class="border-t border-gray-300 mb-6"></div>
+
+        <!-- Payment Section -->
+        <p id="amount" class="text-lg text-gray-700 font-semibold text-center mb-4">Fetching amount...</p>
+
+        <button id="payButton"
+            class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-md shadow-md hover:bg-blue-700 transition duration-300"
+            data-amount="0"
+            onclick="initiatePayment()">
+            Pay Now
+        </button>
+
+        <p class="text-sm text-gray-500 text-center mt-4">Secure transactions powered by <span class="font-semibold text-gray-700">Razorpay</span>.</p>
+    </div>
+</body>
+</html>

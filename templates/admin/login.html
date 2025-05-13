@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Pregnancy Care</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Background Styling */
+        body {
+            background: url('https://source.unsplash.com/1600x900/?pregnancy,motherhood') no-repeat center center/cover;
+        }
+
+        /* Fade-in Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade {
+            animation: fadeIn 1s ease-out;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-pink-100 bg-opacity-90 text-gray-100">
+
+    <div class="bg-white shadow-lg rounded-lg flex flex-col md:flex-row items-center p-8 w-3/5 animate-fade bg-opacity-95">
+        <!-- Left Side: Image -->
+        <div class="w-full md:w-1/2 flex justify-center">
+            <img src="https://tse4.mm.bing.net/th?id=OIP.PzSyuRcCnMmgyt2qCkRU-wHaHa&pid=Api&P=0&h=220" 
+                 alt="Admin Pregnancy" 
+                 class="rounded-lg shadow-lg w-full md:w-auto h-60 object-cover">
+        </div>
+    
+        <!-- Right Side: Login Form -->
+        <div class="w-full md:w-1/2 px-6">
+            <!-- Back Button -->
+            <a href="/" class="text-pink-600 hover:text-pink-800 flex items-center mb-4">
+                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Back
+            </a>
+    
+            <h2 class="text-3xl font-bold text-center text-pink-700">Admin Login</h2>
+            <p class="text-sm text-center text-red-500 font-semibold mt-2">* Admins Only *</p>
+    
+            {% if error %}
+                <p class="text-red-500 text-sm mt-3 text-center">{{ error }}</p>
+            {% endif %}
+    
+            <form action="/admin/login" method="POST" class="mt-5">
+                <div class="mb-4">
+                    <label class="block text-pink-700 font-medium">Username</label>
+                    <input type="text" name="username" required 
+                           class="w-full px-4 py-2 border rounded-lg text-gray-900 bg-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all duration-300">
+                </div>
+    
+                <div class="mb-4">
+                    <label class="block text-pink-700 font-medium">Password</label>
+                    <input type="password" name="password" required 
+                           class="w-full px-4 py-2 border rounded-lg text-gray-900 bg-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all duration-300">
+                </div>
+    
+                <button type="submit" 
+                        class="w-full bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 transition-all duration-300 shadow-lg">
+                    Login
+                </button>
+            </form>
+        </div>
+    </div>
+    
+</body>
+</html>

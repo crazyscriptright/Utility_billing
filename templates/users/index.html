@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Billing System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navigation Bar -->
+    {% include 'users/nav.html' %}
+    <!-- Hero Section -->
+    <section class="relative h-screen bg-blue-900 text-white flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');"></div>
+        <div class="absolute inset-0 bg-black opacity-50"></div>
+        <div class="relative z-10 text-center px-6">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">Welcome to the Utility Billing System</h1>
+            <p class="text-lg md:text-2xl mb-8">Manage your water and electricity bills efficiently with our secure, user-friendly, and government-backed platform.</p>
+            <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                <a onclick="smoothScroll('#services')" class="bg-white text-blue-900 font-semibold py-3 px-8 shadow-lg hover:bg-gray-100 transition duration-300 cursor-pointer">Explore</a>
+                {% if user_name == "Guest" %}
+                <a href="/register" class="bg-transparent border border-white text-white font-semibold py-3 px-8 hover:bg-white hover:text-blue-900 transition duration-300">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="container mx-auto px-6 py-16">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Our Services</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white p-8 shadow-lg text-center">
+                <i class="fas fa-tint text-blue-900 text-4xl mb-4"></i>
+                <h3 class="text-xl font-semibold mb-4">Water Billing</h3>
+                <p class="text-gray-600">Manage your water consumption, view bills, and make payments online.</p>
+            </div>
+            <div class="bg-white p-8 shadow-lg text-center">
+                <i class="fas fa-bolt text-blue-900 text-4xl mb-4"></i>
+                <h3 class="text-xl font-semibold mb-4">Electricity Billing</h3>
+                <p class="text-gray-600">Track your electricity usage, view bills, and pay securely.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- What We Do Section -->
+    <section class="bg-gray-100 py-16">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">What We Do</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-8 shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">Simplify Bill Payments</h3>
+                    <p class="text-gray-600">We provide a seamless platform for paying your water and electricity bills online. No more standing in long queues or dealing with paperwork.</p>
+                </div>
+                <div class="bg-white p-8 shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">Real-Time Usage Tracking</h3>
+                    <p class="text-gray-600">Monitor your water and electricity usage in real-time to make informed decisions and reduce wastage.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who We Are Section -->
+    <section class="container mx-auto px-6 py-16">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Who We Are</h2>
+        <div class="text-center max-w-2xl mx-auto">
+            <p class="text-gray-600 mb-6">We are a government-backed utility billing platform dedicated to providing transparent, efficient, and secure bill payment services for water and electricity.</p>
+            <p class="text-gray-600">Our mission is to make utility bill management hassle-free for citizens while promoting sustainability and resource conservation.</p>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="bg-blue-900 text-white py-16">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">Why Choose Us?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <i class="fas fa-shield-alt text-4xl mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-4">Secure Payments</h3>
+                    <p class="text-gray-300">Your payments are safe with our advanced encryption technology.</p>
+                </div>
+                <div class="text-center">
+                    <i class="fas fa-clock text-4xl mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-4">24/7 Access</h3>
+                    <p class="text-gray-300">Access your bills and make payments anytime, anywhere.</p>
+                </div>
+                <div class="text-center">
+                    <i class="fas fa-headset text-4xl mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-4">Dedicated Support</h3>
+                    <p class="text-gray-300">Our support team is here to help you with any queries.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">What Our Users Say</h2>
+        <!-- Swiper Container -->
+        <div class="swiper-container p-8">
+            <div class="swiper-wrapper">
+                <!-- Testimonial 1 -->
+                <div class="swiper-slide">
+                    <div class="testimonial-card">
+                        <img src="https://via.placeholder.com/100" alt="User 1">
+                        <h3>Alice Johnson</h3>
+                        <p>"This platform made bill payments so easy! I can track everything in real-time."</p>
+                    </div>
+                </div>
+                <!-- Testimonial 2 -->
+                <div class="swiper-slide">
+                    <div class="testimonial-card">
+                        <img src="https://via.placeholder.com/100" alt="User 2">
+                        <h3>David Smith</h3>
+                        <p>"User-friendly and secure. Now I never miss a payment deadline!"</p>
+                    </div>
+                </div>
+                <!-- Testimonial 3 -->
+                <div class="swiper-slide">
+                    <div class="testimonial-card">
+                        <img src="https://via.placeholder.com/100" alt="User 3">
+                        <h3>Michael Brown</h3>
+                        <p>"I love the transparency of this system. I can check my bills anytime!"</p>
+                    </div>
+                </div>
+                <!-- Testimonial 4 -->
+                <div class="swiper-slide">
+                    <div class="testimonial-card">
+                        <img src="https://via.placeholder.com/100" alt="User 4">
+                        <h3>Emma Wilson</h3>
+                        <p>"Superb customer support! They resolved my issue in minutes."</p>
+                    </div>
+                </div>
+                <!-- Testimonial 5 -->
+                <div class="swiper-slide">
+                    <div class="testimonial-card">
+                        <img src="https://via.placeholder.com/100" alt="User 5">
+                        <h3>Olivia Martinez</h3>
+                        <p>"Paying bills has never been this convenient. Highly recommended!"</p>
+                    </div>
+                </div>
+                <!-- Testimonial 6 -->
+                <div class="swiper-slide">
+                    <div class="testimonial-card">
+                        <img src="https://via.placeholder.com/100" alt="User 6">
+                        <h3>Daniel Lee</h3>
+                        <p>"I appreciate the real-time notifications. Makes life so much easier!"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Swiper.js -->
+<script>
+    const swiper = new Swiper('.swiper-container', {
+        loop: true,
+        slidesPerView: 3,
+        centeredSlides: true,
+        autoplay: {
+            delay: 2000,
+            disableOnInteraction: false,
+        },
+        speed: 1000,
+        spaceBetween: 10,
+        breakpoints: {
+            640: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+        },
+        on: {
+            slideChangeTransitionEnd: function () {
+                let slides = document.querySelectorAll('.swiper-slide .testimonial-card');
+                slides.forEach(card => {
+                    card.classList.remove("active-slide");
+                    card.classList.add("blur-slide");
+                });
+                this.slides[this.activeIndex].querySelector(".testimonial-card").classList.add("active-slide");
+                this.slides[this.activeIndex].querySelector(".testimonial-card").classList.remove("blur-slide");
+            }
+        }
+    });
+</script>
+
+<style>
+    .swiper-container {
+        width: 100%;
+        overflow: hidden;
+    }
+    .swiper-wrapper {
+        display: flex;
+        align-items: center;
+    }
+    .swiper-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.3s ease;
+    }
+    .testimonial-card {
+        width: 300px;
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    .testimonial-card img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+    }
+    .testimonial-card h3 {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+    }
+    .testimonial-card p {
+        font-size: 14px;
+        color: #666;
+    }
+    .active-slide {
+        transform: scale(1.2);
+        z-index: 10;
+    }
+    .blur-slide {
+        transform: scale(0.9);
+        opacity: 0.5;
+    }
+</style>
+
+    <script>
+        function smoothScroll(target) {
+            const element = document.querySelector(target);
+            if (element) {
+                const offset = element.offsetTop;
+                const duration = 1000;
+                const start = window.pageYOffset;
+                const distance = offset - start;
+                let startTime = null;
+
+                function animation(currentTime) {
+                    if (startTime === null) startTime = currentTime;
+                    const timeElapsed = currentTime - startTime;
+                    const run = easeInOutQuad(timeElapsed, start, distance, duration);
+                    window.scrollTo(0, run);
+                    if (timeElapsed < duration) requestAnimationFrame(animation);
+                }
+
+                function easeInOutQuad(t, b, c, d) {
+                    t /= d / 2;
+                    if (t < 1) return (c / 2) * t * t + b;
+                    t--;
+                    return (-c / 2) * (t * (t - 2) - 1) + b;
+                }
+
+                requestAnimationFrame(animation);
+            }
+        }
+    </script>
+</body>
+</html>

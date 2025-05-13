@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Billing Status - Govt. Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        async function fetchPaymentStatus(event) {
+            event.preventDefault();
+            
+            const waterId = document.getElementById('water_id').value;
+
+            const response = await fetch("/api/get-payment-status", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ water_id: waterId })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                let isPayDisabled = data.amount <= 0 ? "disabled" : "";
+                let payButtonClass = data.amount <= 0 ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700";
+
+                document.getElementById('statusResult').innerHTML = `
+                    <table class='table-auto w-full border-collapse border border-gray-500 mt-6 bg-white'>
+                        <thead>
+                            <tr class='bg-blue-900 text-white'>
+                                <th class='border px-4 py-3'>Payment ID</th>
+                                <th class='border px-4 py-3'>Amount</th>
+                                <th class='border px-4 py-3'>Status</th>
+                                <th class='border px-4 py-3'>Paid At</th>
+                                <th class='border px-4 py-3'>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class='text-gray-800 text-center font-medium'>
+                                <td class='border px-4 py-3'>${data.payment_id}</td>
+                                <td class='border px-4 py-3'>₹${data.amount}</td>
+                                <td class='border px-4 py-3'>${data.payment_status}</td>
+                                <td class='border px-4 py-3'>${data.paid_at}</td>
+                                <td class='border px-4 py-3'>
+                                    <a href="/pay?bill_id=${waterId}&bill_type=water" 
+                                    class="inline-block text-white px-4 py-2 rounded-md font-semibold ${payButtonClass}" 
+                                    ${isPayDisabled}>
+                                    Pay Now
+                                    </a>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>`;
+            } else {
+                document.getElementById('statusResult').innerHTML = `<p class='text-red-600 font-semibold mt-4'>${data.detail}</p>`;
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 py-12 font-sans">
+
+    <!-- Navigation -->
+    {% include 'users/nav.html' %}
+
+    <!-- Top Card Links -->
+    <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+        <a href="/electricity_billing" class="block bg-blue-900 text-white p-6 rounded-md shadow-lg text-center hover:bg-blue-800">
+            <h3 class="text-2xl font-bold mb-2">Electricity Bill</h3>
+            <p class="text-lg">Check & Pay Your Electricity Bill</p>
+        </a>
+        <a href="/water_billing" class="block bg-blue-900 text-white p-6 rounded-md shadow-lg text-center hover:bg-blue-800">
+            <h3 class="text-2xl font-bold mb-2">Water Bill</h3>
+            <p class="text-lg">Check & Pay Your Water Bill</p>
+        </a>
+    </div>
+
+    <!-- Main Card -->
+    <div class="max-w-lg mx-auto bg-white p-8 rounded-md shadow-xl border border-gray-300">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Check Water Bill Status</h2>
+        <form onsubmit="fetchPaymentStatus(event)">
+            <label class="block text-gray-800 font-semibold text-lg">Enter Water ID</label>
+            <input type="text" id="water_id" class="w-full p-3 border border-gray-500 rounded-md mt-3" placeholder="Water ID" required>
+            <button type="submit" class="w-full bg-blue-900 text-white p-3 rounded-md font-bold hover:bg-blue-700 mt-4">
+                Check Status
+            </button>
+        </form>
+        <div id="statusResult" class="mt-6"></div>
+    </div>
+
+</body>
+</html>

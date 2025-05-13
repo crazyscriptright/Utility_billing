@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Utility Billing System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    
+    <!-- Navigation Bar -->
+    {% include 'users/nav.html' %}
+
+    <!-- About Section -->
+    <section class="container mx-auto px-6 py-16">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">About the Utility Billing System</h2>
+        <p class="text-gray-600 text-center max-w-3xl mx-auto">
+            The Utility Billing System is a government initiative designed to provide citizens with an efficient, transparent, and secure platform for managing utility payments. Our platform ensures timely and accurate billing for essential services such as water, electricity, and gas.
+        </p>
+    </section>
+    
+    <!-- Services Section -->
+    <section class="bg-white py-16">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Our Services</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Service Cards -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                    <h3 class="text-xl font-semibold text-blue-900">Water Billing</h3>
+                    <p class="text-gray-600 mt-2">Track consumption and pay water bills seamlessly.</p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                    <h3 class="text-xl font-semibold text-blue-900">Electricity Billing</h3>
+                    <p class="text-gray-600 mt-2">Monitor your power usage and make secure payments.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Get in Touch Section -->
+<!-- Get in Touch Section -->
+<section class="bg-blue-900 text-white py-16">
+    <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-8">Get in Touch</h2>
+        <form action="https://api.web3forms.com/submit" method="POST" class="max-w-lg mx-auto bg-white p-6 shadow-lg border border-gray-300 rounded-lg">
+            
+            <!-- Hidden Access Key -->
+            <input type="hidden" name="access_key" value="90df16a6-bc64-433d-89c0-1ac3f90e0111">
+            
+            <div class="mb-4">
+                <label class="block text-gray-900 font-semibold mb-1">Full Name</label>
+                <input type="text" name="name" class="w-full p-3 border border-gray-400 focus:border-blue-900 focus:ring-0 text-gray-900 rounded-md" placeholder="Enter your full name" required>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-gray-900 font-semibold mb-1">Email</label>
+                <input type="email" name="email" class="w-full p-3 border border-gray-400 focus:border-blue-900 focus:ring-0 text-gray-900 rounded-md" placeholder="Enter your email" required>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-gray-900 font-semibold mb-1">Message</label>
+                <textarea name="message" class="w-full p-3 border border-gray-400 focus:border-blue-900 focus:ring-0 text-gray-900 rounded-md" rows="4" placeholder="Your message..." required></textarea>
+            </div>
+            
+            <!-- Honeypot Spam Protection -->
+            <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+            
+            <button type="submit" class="w-full bg-blue-900 text-white p-3 font-semibold rounded-md hover:bg-blue-700 transition-all">Submit Form</button>
+        
+        </form>
+    </div>
+</section>
+
+
+<script>
+document.getElementById("contactForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+    
+    const formData = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        message: document.getElementById("message").value
+    };
+
+    const response = await fetch("http://127.0.0.1:8000/send-email/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer YOUR_ACCESS_KEY"  // Replace with actual key
+        },
+        body: JSON.stringify(formData)
+    });
+
+    const result = await response.json();
+    alert(result.detail);
+});
+</script>
+
+    <!--Footer-->
+    {% include 'users/footer.html' %}
+</body>
+</html>

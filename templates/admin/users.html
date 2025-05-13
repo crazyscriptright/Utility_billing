@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Billing - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-64 bg-blue-900 text-white p-5 fixed h-full transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0">
+            <h1 class="text-2xl font-bold mb-6">Utility Admin</h1>
+            <nav>
+                <a href="/admin/home" class="block py-2 px-4 bg-blue-700 rounded">Dashboard</a>
+                <a href="/admin/users_page" class="block py-2 px-4 hover:bg-blue-700 rounded mt-2 hover:underline">Users</a>
+                <a href="/admin/bill_page" class="block py-2 px-4 hover:bg-blue-700 rounded mt-2 hover:underline">Billing</a>
+                <a href="/admin/update_date.html" class="block py-2 px-4 hover:bg-blue-700 rounded mt-2 hover:underline">Update Billing Date</a></li>
+            </nav>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col md:ml-64">
+            <!-- Header Section -->
+            <header class="bg-white shadow p-4 flex justify-between items-center">
+                <button id="menu-toggle-btn" class="md:hidden text-blue-900 focus:outline-none" onclick="toggleSidebar()">
+                    <svg class="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="9" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="11" y2="18"></line>
+                    </svg>
+                </button>
+                <h2 class="text-2xl font-semibold">Dashboard</h2>
+                <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Logout</button>
+            </header>
+            
+            <main class="flex-1 p-6">
+                
+                <!-- Admin User Management Section -->
+                <section id="admin-users" class="admin-section">
+                    <h2 class="text-2xl font-semibold text-center text-gray-900">User Details</h2>
+                
+                    <!-- Filters Section -->
+                    <div class="mt-4 flex justify-between">
+                        <input id="username-filter" type="text" placeholder="Filter by Username" class="p-2 border rounded" />
+                        <input id="phone-filter" type="text" placeholder="Filter by Phone" class="p-2 border rounded" />
+                        <input id="email-filter" type="text" placeholder="Filter by Email" class="p-2 border rounded" />
+                    </div>
+                
+                    
+                
+                    <!-- Scroller for table rows -->
+                    <div class="max-h-96 overflow-y-auto mt-4">
+                        <table id="user-table" class="min-w-full table-auto border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left border-b">UID</th>
+                                    <th class="p-3 text-left border-b">Username</th>
+                                    <th class="p-3 text-left border-b">Phone</th>
+                                    <th class="p-3 text-left border-b">Email</th>
+                                    <th class="p-3 text-left border-b">Date of Birth</th>
+                                    <th class="p-3 text-left border-b">Created At</th>
+                                    <th class="p-3 text-left border-b">Modified At</th>
+                                </tr>
+                            </thead>
+                            <tbody id="user-table-body">
+                                <!-- Data will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                
+                    <div id="loading" class="text-center mt-4 hidden">
+                        <p>Loading...</p>
+                    </div>
+                    <div id="error-message" class="text-center mt-4 hidden text-red-600">
+                        <p>Error loading data. Please try again later.</p>
+                    </div>
+                </section>
+                
+                <!-- JavaScript to Fetch Data and Apply Filters -->
+                <script>
+                    // Fetch user data for the admin panel
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const userTableBody = document.getElementById('user-table-body');
+                        const loading = document.getElementById('loading');
+                        const errorMessage = document.getElementById('error-message');
+                        
+                        const usernameFilter = document.getElementById('username-filter');
+                        const phoneFilter = document.getElementById('phone-filter');
+                        const emailFilter = document.getElementById('email-filter');
+                
+                        // Show loading spinner while fetching data
+                        loading.classList.remove('hidden');
+                
+                        fetch('/admin/users')
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.error) {
+                                    errorMessage.classList.remove('hidden');
+                                    loading.classList.add('hidden');
+                                    return;
+                                }
+                
+                                // Hide the loading and error messages
+                                loading.classList.add('hidden');
+                                errorMessage.classList.add('hidden');
+                
+                                // Populate table rows
+                                const filteredData = data.filter(user => {
+                                    return (user.uname.toLowerCase().includes(usernameFilter.value.toLowerCase()) &&
+                                            user.phno.includes(phoneFilter.value) &&
+                                            user.mail.toLowerCase().includes(emailFilter.value.toLowerCase()));
+                                });
+                
+                                userTableBody.innerHTML = ""; // Clear existing rows
+                
+                                filteredData.forEach(user => {
+                                    const row = document.createElement('tr');
+                                    row.classList.add('bg-white', 'hover:bg-gray-50');
+                
+                                    row.innerHTML = `
+                                        <td class="p-3 text-left border-b">${user.uid}</td>
+                                        <td class="p-3 text-left border-b">${user.uname}</td>
+                                        <td class="p-3 text-left border-b">${user.phno}</td>
+                                        <td class="p-3 text-left border-b">${user.mail}</td>
+                                        <td class="p-3 text-left border-b">${user.dob}</td>
+                                        <td class="p-3 text-left border-b">${user.created_at}</td>
+                                        <td class="p-3 text-left border-b">${user.modified_at}</td>
+                                    `;
+                                    userTableBody.appendChild(row);
+                                });
+                            })
+                            .catch(error => {
+                                errorMessage.classList.remove('hidden');
+                                loading.classList.add('hidden');
+                                console.error('Error fetching user data:', error);
+                            });
+                    });
+                
+                    // Add event listeners for filters
+                    document.getElementById('username-filter').addEventListener('input', updateTable);
+                    document.getElementById('phone-filter').addEventListener('input', updateTable);
+                    document.getElementById('email-filter').addEventListener('input', updateTable);
+                
+                    // Update the table with filtered data
+                    function updateTable() {
+                        document.dispatchEvent(new Event('DOMContentLoaded'));
+                    }
+                </script>
+                
+                </div>
+                
+            </main>
+        </div>
+    </div>
+
+    <script>
+        async function fetchDashboardStats() {
+            try {
+                const response = await axios.get("http://127.0.0.1:8000/dashboard/stats"); // Adjust URL if needed
+                const data = response.data;
+                
+                document.getElementById("totalUsers").textContent = data.total_users;
+                document.getElementById("activeUsers").textContent = data.active_users;
+                document.getElementById("pendingBills").textContent = data.pending_bills;
+                document.getElementById("totalRevenue").textContent = `₹${data.total_revenue.toFixed(2)}`;
+            } catch (error) {
+                console.error("Error fetching dashboard stats:", error);
+            }
+        }
+        
+        
+        // Fetch stats on page load
+        window.onload = fetchDashboardStats;
+    </script>
+</body>
+</html>

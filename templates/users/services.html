@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Billing Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navigation Bar -->
+    {% include 'users/nav.html' %}
+
+    <!-- Services Section -->
+    <section class="container mx-auto px-6 py-16">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Our Services</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Water Billing Card -->
+            <a href="/water_billing" class="block bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="relative h-48 overflow-hidden rounded-t-lg">
+                    <img src="/static/images/water.jpeg" alt="Water Billing" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black opacity-30"></div>
+                    <i class="fas fa-tint text-white text-6xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+                </div>
+                <div class="p-8">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-900">Water Billing</h3>
+                    <p class="text-gray-600 mb-4">
+                        Effortlessly manage your water usage with our advanced billing system. Track consumption, view detailed bills, and make secure payments online.
+                    </p>
+                    <ul class="text-gray-600 list-disc list-inside mb-4">
+                        <li>Real-time water usage tracking</li>
+                        <li>Instant bill generation</li>
+                        <li>Secure online payment options</li>
+                    </ul>
+                </div>
+            </a>
+
+            <!-- Electricity Billing Card -->
+            <a href="/electricity_billing" class="block bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="relative h-48 overflow-hidden rounded-t-lg">
+                    <img src="/static/images/electricity.jpeg" alt="Electricity Billing" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black opacity-30"></div>
+                    <i class="fas fa-bolt text-white text-6xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+                </div>
+                <div class="p-8">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-900">Electricity Billing</h3>
+                    <p class="text-gray-600 mb-4">
+                        Take control of your electricity consumption with our intuitive billing platform. Monitor usage, access bills, and pay securely from anywhere.
+                    </p>
+                    <ul class="text-gray-600 list-disc list-inside mb-4">
+                        <li>Detailed electricity usage reports</li>
+                        <li>Automated bill reminders</li>
+                        <li>Multiple payment gateways</li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="bg-blue-900 text-white py-16">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">Why Choose Us?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <i class="fas fa-shield-alt text-4xl mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-4">Secure Payments</h3>
+                    <p class="text-gray-300">Your transactions are protected with advanced encryption technology.</p>
+                </div>
+                <div class="text-center">
+                    <i class="fas fa-clock text-4xl mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-4">24/7 Access</h3>
+                    <p class="text-gray-300">Access your bills and make payments anytime, anywhere.</p>
+                </div>
+                <div class="text-center">
+                    <i class="fas fa-headset text-4xl mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-4">Dedicated Support</h3>
+                    <p class="text-gray-300">Our support team is always ready to assist you.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
