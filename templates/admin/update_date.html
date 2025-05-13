@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Billing Date</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Navigation Bar -->
+    <aside id="sidebar" class="w-64 bg-blue-900 text-white p-5 fixed h-full transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0">
+        <h1 class="text-2xl font-bold mb-6">Utility Admin</h1>
+        <nav>
+            <a href="/admin/home" class="block py-2 px-4 bg-blue-700 rounded">Dashboard</a>
+            <a href="/admin/users_page" class="block py-2 px-4 hover:bg-blue-700 rounded mt-2 hover:underline">Users</a>
+            <a href="/admin/bill_page" class="block py-2 px-4 hover:bg-blue-700 rounded mt-2 hover:underline">Billing</a>
+            <a href="/admin/update_date.html" class="block py-2 px-4 hover:bg-blue-700 rounded mt-2 hover:underline">Update Billing Date</a></li>
+        </nav>
+    </aside>
+    <div class="flex-1 flex flex-col md:ml-64">
+
+    <header class="bg-white shadow p-4 flex justify-between items-center">
+        <button id="menu-toggle-btn" class="md:hidden text-blue-900 focus:outline-none" onclick="toggleSidebar()">
+            <svg class="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="9" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="11" y2="18"></line>
+            </svg>
+        </button>
+        <h2 class="text-2xl font-semibold">Dashboard</h2>
+        <form action="/logout" method="get">
+            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Logout</button>
+        </form>
+    </header>
+    <!-- Main Content -->
+    <div class="flex items-center justify-center py-12">
+        <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-4">Update Billing Date</h1>
+            <p class="text-gray-600 mb-6">
+                Select a date to update the billing records in the database.
+            </p>
+
+            <!-- Date Input -->
+            <form id="updateDateForm" class="space-y-4">
+                <div>
+                    <label for="billingDate" class="block text-sm font-medium text-gray-700">Select Date</label>
+                    <input type="date" id="billingDate" name="date" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition duration-200">
+                    Update Date
+                </button>
+            </form>
+
+            <!-- Status Message -->
+            <div id="statusMessage" class="mt-4 text-center hidden">
+                <p class="text-sm font-medium"></p>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        document.getElementById("updateDateForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const billingDate = document.getElementById("billingDate").value;
+            const statusMessage = document.getElementById("statusMessage");
+
+            // Clear previous status message
+            statusMessage.classList.add("hidden");
+            statusMessage.querySelector("p").textContent = "";
+
+            if (!billingDate) {
+                statusMessage.classList.remove("hidden");
+                statusMessage.querySelector("p").textContent = "Please select a date.";
+                statusMessage.querySelector("p").className = "text-red-600";
+                return;
+            }
+
+            try {
+                // Send POST request to update the billing date
+                const response = await axios.post("/api/admin/update-billing-date", { date: billingDate });
+
+                // Display success message
+                statusMessage.classList.remove("hidden");
+                statusMessage.querySelector("p").textContent = response.data.message;
+                statusMessage.querySelector("p").className = "text-green-600";
+            } catch (error) {
+                // Display error message
+                statusMessage.classList.remove("hidden");
+                statusMessage.querySelector("p").textContent = error.response?.data?.detail || "An error occurred.";
+                statusMessage.querySelector("p").className = "text-red-600";
+            }
+        });
+    </script>
+</body>
+</html>

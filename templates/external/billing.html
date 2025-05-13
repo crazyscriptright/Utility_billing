@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Billing System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-bolt text-blue-600 text-2xl"></i>
+                    <span class="font-semibold text-gray-800 text-lg">Utility Services</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-600 hidden md:inline">Welcome, <span id="usernameDisplay">External User</span></span>
+                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-200 flex items-center">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-600 to-blue-500 text-white py-16">
+        <div class="max-w-6xl mx-auto px-4 text-center fade-in">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Utility Billing Management</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Efficiently manage water and electricity billing for all properties</p>
+            <div class="flex flex-col md:flex-row justify-center gap-4">
+                <a href="#billing-update" class="bg-white text-blue-600 hover:bg-gray-100 px-6 py-3 rounded-lg font-medium transition duration-200">
+                    <i class="fas fa-file-invoice mr-2"></i> Update Billing
+                </a>
+                <a href="#add-billing" class="bg-blue-700 hover:bg-blue-800 px-6 py-3 rounded-lg font-medium transition duration-200">
+                    <i class="fas fa-plus-circle mr-2"></i> Add Billing Data
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-12">
+        <!-- Billing Update Section -->
+        <section id="billing-update" class="bg-white rounded-xl shadow-md overflow-hidden mb-12 fade-in">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2 flex items-center">
+                    <i class="fas fa-file-invoice-dollar mr-3 text-blue-500"></i>
+                    Generate New Billing Statements
+                </h2>
+                <p class="text-gray-600 mb-6">Create new billing cycles for all properties</p>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Date Selection Card -->
+                    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4">Select Billing Date</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="billingDate" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Statement Date <span class="text-red-500">*</span>
+                                </label>
+                                <div class="mt-1 relative rounded-md shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="far fa-calendar text-gray-400"></i>
+                                    </div>
+                                    <input 
+                                        type="date" 
+                                        id="billingDate" 
+                                        class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md"
+                                        min="">
+                                </div>
+                                <p class="mt-1 text-xs text-gray-500">Date must be in the future</p>
+                            </div>
+
+                            <button 
+                                id="updateBillingBtn" 
+                                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition duration-200 flex items-center justify-center"
+                                disabled>
+                                <i class="fas fa-sync-alt mr-2"></i>
+                                <span>Generate Statements</span>
+                                <span id="spinner" class="ml-2 hidden">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Information Card -->
+                    <div class="bg-blue-50 border-l-4 border-blue-400 rounded-r-lg p-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-info-circle text-blue-500 text-xl mt-1"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-lg font-medium text-blue-800">About This Process</h3>
+                                <div class="mt-2 text-blue-700">
+                                    <p class="mb-2">This will:</p>
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <li>Create new billing statements for all properties</li>
+                                        <li>Set all accounts to 'Unpaid' status</li>
+                                        <li>Update the billing cycle date</li>
+                                    </ul>
+                                    <p class="mt-3 text-sm">This action cannot be undone.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Indicator -->
+                <div id="statusIndicator" class="hidden mt-6 rounded-lg p-4 border">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <i id="statusIcon" class="fas fa-check-circle text-xl"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 id="statusTitle" class="text-lg font-medium"></h3>
+                            <div class="mt-1">
+                                <p id="statusMessage"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add Billing Data Section -->
+        <section id="add-billing" class="bg-white rounded-xl shadow-md overflow-hidden mb-12 fade-in">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2 flex items-center">
+                    <i class="fas fa-file-invoice-dollar mr-3 text-blue-500"></i>
+                    Add Billing Data
+                </h2>
+                <p class="text-gray-600 mb-6">Use the form below to add new billing data.</p>
+
+                <form id="addBillingForm" class="space-y-4">
+                    <div>
+                        <label for="currentId" class="block text-sm font-medium text-gray-700">Current ID</label>
+                        <input type="text" id="currentId" name="current_id" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="waterId" class="block text-sm font-medium text-gray-700">Water ID</label>
+                        <input type="text" id="waterId" name="water_id" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="amountCurrent" class="block text-sm font-medium text-gray-700">Amount (Current)</label>
+                        <input type="number" id="amountCurrent" name="amount_current" step="0.01" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="amountWater" class="block text-sm font-medium text-gray-700">Amount (Water)</label>
+                        <input type="number" id="amountWater" name="amount_water" step="0.01" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="phoneNo" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <input type="text" id="phoneNo" name="phone_no" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition duration-200">
+                        Add Billing Data
+                    </button>
+                </form>
+
+                <!-- Status Message -->
+                <div id="addBillingStatusMessage" class="mt-4 text-center hidden">
+                    <p class="text-sm font-medium"></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-xl font-semibold">Utility Services</h3>
+                    <p class="text-gray-400 mt-1">Efficient billing management system</p>
+                </div>
+                <div class="text-gray-400 text-sm">
+                    <p>© 2023 Utility Services. All rights reserved.</p>
+                    <p class="mt-1">v2.1.0</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set minimum date to tomorrow
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('billingDate').min = tomorrow.toISOString().split('T')[0];
+
+            // Enable/disable button based on date selection
+            document.getElementById('billingDate').addEventListener('change', function() {
+                document.getElementById('updateBillingBtn').disabled = !this.value;
+            });
+
+            // Update billing button click handler
+            document.getElementById('updateBillingBtn').addEventListener('click', async function() {
+                const billingDate = document.getElementById('billingDate').value;
+                const statusIndicator = document.getElementById('statusIndicator');
+                
+                // Clear previous status
+                statusIndicator.classList.add('hidden');
+                
+                // Validate date
+                if (!billingDate) {
+                    showStatus('error', 'Error', 'Please select a valid date');
+                    return;
+                }
+
+                // Update button state
+                const btn = document.getElementById('updateBillingBtn');
+                btn.disabled = true;
+                document.getElementById('spinner').classList.remove('hidden');
+
+                try {
+                    const response = await axios.post('/api/update-billing', { 
+                        date: billingDate 
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    showStatus('success', 'Success', response.data.message || 'Billing statements generated successfully');
+                    document.getElementById('billingDate').value = '';
+                    
+                } catch (error) {
+                    const errorMsg = error.response?.data?.detail || 
+                                   'An error occurred while generating statements';
+                    showStatus('error', 'Error', errorMsg);
+                } finally {
+                    document.getElementById('updateBillingBtn').disabled = false;
+                    document.getElementById('spinner').classList.add('hidden');
+                }
+            });
+
+            // Add billing form submission
+            document.getElementById("addBillingForm").addEventListener("submit", async function (event) {
+                event.preventDefault();
+
+                const formData = new FormData(event.target);
+                const billingData = Object.fromEntries(formData.entries());
+                const statusMessage = document.getElementById("addBillingStatusMessage");
+
+                // Clear previous status message
+                statusMessage.classList.add("hidden");
+                statusMessage.querySelector("p").textContent = "";
+
+                try {
+                    // Send POST request to add billing data
+                    const response = await axios.post("/api/add-billing", billingData, {
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    });
+
+                    // Display success message
+                    statusMessage.classList.remove("hidden");
+                    statusMessage.querySelector("p").textContent = response.data.message;
+                    statusMessage.querySelector("p").className = "text-sm font-medium text-green-600";
+                    event.target.reset(); // Reset the form
+                } catch (error) {
+                    // Display error message
+                    statusMessage.classList.remove("hidden");
+                    statusMessage.querySelector("p").textContent = error.response?.data?.detail || "An error occurred.";
+                    statusMessage.querySelector("p").className = "text-sm font-medium text-red-600";
+                }
+            });
+
+            // Check user session
+            checkUserSession();
+        });
+
+        // Check user session
+        function checkUserSession() {
+            // In a real app, you would verify the session token
+            const username = "external@gmail.com"; // Replace with actual user from session
+            document.getElementById('usernameDisplay').textContent = username;
+        }
+
+        // Show status messages
+        function showStatus(type, title, message) {
+            const statusIndicator = document.getElementById('statusIndicator');
+            const statusIcon = document.getElementById('statusIcon');
+            const statusTitle = document.getElementById('statusTitle');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            statusIndicator.classList.remove('hidden');
+            statusTitle.textContent = title;
+            statusMessage.textContent = message;
+            
+            if (type === 'success') {
+                statusIndicator.className = 'bg-green-50 border-green-200 mt-6 rounded-lg p-4 border';
+                statusIcon.className = 'fas fa-check-circle text-xl text-green-500';
+                statusTitle.className = 'text-lg font-medium text-green-800';
+            } else {
+                statusIndicator.className = 'bg-red-50 border-red-200 mt-6 rounded-lg p-4 border';
+                statusIcon.className = 'fas fa-exclamation-circle text-xl text-red-500';
+                statusTitle.className = 'text-lg font-medium text-red-800';
+            }
+        }
+
+        // Logout function
+        function logout() {
+            window.location.href = "/logout";
+        }
+    </script>
+</body>
+</html>

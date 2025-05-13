@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sliding Register & Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="flex items-center justify-center h-screen bg-gray-100">
+    <!--Nav Bar-->
+    {% include 'users/nav.html' %}
+    <div class="relative w-96 bg-white rounded-lg shadow-lg overflow-hidden">
+        <!-- Form Container -->
+        <div id="formContainer" class="flex w-[200%] transition-transform duration-500">
+            <!-- Register Form -->
+            <div class="w-1/2 p-6">
+                <h2 class="text-2xl font-bold text-center text-blue-900">Register</h2>
+                <form id="register-form" class="space-y-3 mt-4">
+                    <input type="text" name="uname" placeholder="Username" class="w-full p-2 border-2 rounded-none focus:ring focus:ring-blue-300" required>
+                    <input type="email" name="mail" placeholder="Email" class="w-full p-2 border-2 rounded-none focus:ring focus:ring-blue-300" required>
+                    <input type="tel" name="phno" placeholder="Phone Number" class="w-full p-2 border-2 rounded-none focus:ring focus:ring-blue-300" required>
+                    <input type="date" name="dob" placeholder="Date of Birth" class="w-full p-2 border-2 rounded-none focus:ring focus:ring-blue-300" required>
+
+                    <input type="password" name="password" placeholder="Password" class="w-full p-2 border-2 rounded-none focus:ring focus:ring-blue-300" required>
+                    <button type="submit" class="w-full bg-blue-900 text-white p-2 rounded-none hover:bg-blue-700 transition">Register</button>
+                </form>
+            </div>
+
+            <!-- Login Form -->
+            <div class="w-1/2 p-6">
+                <h2 class="text-2xl font-bold text-center text-blue-900">Login</h2>
+                <form id="login-form" class="space-y-3 mt-4">
+                    <input type="email" name="mail" placeholder="Email" class="w-full p-2 border-2 rounded-none focus:ring focus:ring-blue-300" required>
+                    <input type="password" name="password" placeholder="Password" class="w-full p-2 border-2 rounded-none focus:ring focus:ring-blue-300" required>
+                    <button type="submit" class="w-full bg-blue-900 text-white p-2 rounded-none hover:bg-blue-700 transition">Login</button>
+                </form>                
+            </div>
+        </div>
+
+        <!-- Toggle Button -->
+        <div id="toggleForm" class="text-center py-3 bg-gray-200 cursor-pointer font-bold hover:bg-gray-300 transition">
+            Switch to Login
+        </div>
+    </div>
+
+    <script>
+        // Sliding form functionality
+        const formContainer = document.getElementById('formContainer');
+    const toggleButton = document.getElementById('toggleForm');
+    let isLogin = true; // Set to true to make login the default view
+
+    // Set the initial state to show the login form
+    formContainer.style.transform = 'translateX(-50%)';
+    toggleButton.innerText = 'Switch to Register';
+
+    toggleButton.addEventListener('click', () => {
+        isLogin = !isLogin;
+        formContainer.style.transform = isLogin ? 'translateX(-50%)' : 'translateX(0)';
+        toggleButton.innerText = isLogin ? 'Switch to Register' : 'Switch to Login';
+    });
+    
+        document.getElementById("login-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const loginData = Object.fromEntries(formData.entries());
+
+            const response = await fetch("/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(loginData)
+            });
+
+            if (response.redirected) {
+                // Redirect to the URL provided by the backend
+                window.location.href = response.url;
+            } else {
+                const result = await response.json();
+                alert(result.detail || "Login failed. Please check your credentials.");
+            }
+        });
+        // Registration form submission
+        document.getElementById("register-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+    
+            const formData = new FormData(event.target);
+            const userData = Object.fromEntries(formData.entries());
+    
+            const response = await fetch("/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(userData)
+            });
+    
+            const result = await response.json();
+            alert(result.message || result.detail);
+    
+            // Delay the page refresh to ensure the alert is acknowledged first
+            setTimeout(() => {
+                window.location.reload();
+            }, 500); // Adjust delay if necessary
+        });
+    
+    </script>
+    
+</body>
+</html>

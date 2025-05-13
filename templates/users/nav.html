@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Billing System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <nav class="bg-white text-gray-900 p-4 shadow-md fixed top-0 left-0 w-full z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Website Title -->
+            <a href="/" class="text-2xl font-bold text-gray-800 hover:text-gray-600 transition duration-300">
+                Utility Billing System
+            </a>
+    
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-gray-700 focus:outline-none" id="nav-toggle">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+    
+            <!-- Desktop Menu -->
+            <ul class="hidden md:flex space-x-6 text-lg font-medium" id="nav-menu">
+                <li><a href="/" class="hover:text-gray-600 transition duration-300">Home</a></li>
+                <li><a href="/services" class="hover:text-gray-600 transition duration-300">Services</a></li>
+                <li><a href="/about" class="hover:text-gray-600 transition duration-300">About</a></li>
+                <li>
+                    {% if user_name == "Guest" %}
+                    <a href="/register" class="text-blue-900 bg-white border border-blue-900 font-semibold px-8 py-3 rounded shadow-lg hover:bg-gray-100 hover:text-blue-900 transition duration-300 cursor-pointer">
+                        Login
+                    </a>
+                    {% endif %}
+
+                </li>
+            </ul>
+    
+            <!-- User Profile Icon (Conditional Rendering) -->
+            {% if user_name != "Guest" %}
+            <button class="ml-6 text-gray-700 focus:outline-none flex items-center" id="profile-toggle">
+                <i class="fas fa-user-circle text-2xl"></i>
+                <span class="ml-2">{{ user_name }}</span>
+            </button>
+            {% endif %}
+        </div>
+    </nav>
+    
+    <!-- Small Side Panel (Conditional Rendering) -->
+    {% if user_name != "Guest" %}
+    <div id="profile-panel" class="fixed top-16 right-0 w-64 h-48 bg-white shadow-lg transform translate-x-full transition-transform duration-300 z-50">
+        <div class="p-4">
+            <h3 class="text-lg font-semibold text-gray-800">User Profile</h3>
+            <hr class="my-2">
+            <ul class="space-y-2">
+                <li><a href="/profile" class="block text-gray-700 hover:text-blue-500">View Profile</a></li>
+                <li><a href="/paymenthistory" class="block text-gray-700 hover:text-blue-500">Payment History</a></li>
+                <li><a href="/logout" class="block text-gray-700 hover:text-blue-500">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    <script>
+        const profileToggle = document.getElementById('profile-toggle');
+        const profilePanel = document.getElementById('profile-panel');
+
+        if (profileToggle && profilePanel) {
+            profileToggle.addEventListener('click', function (event) {
+                event.stopPropagation(); // Prevents the click from closing the panel immediately
+                profilePanel.classList.toggle('translate-x-full');
+            });
+
+            // Close panel when clicking outside of it
+            document.addEventListener('click', function (event) {
+                if (!profilePanel.contains(event.target) && !profileToggle.contains(event.target)) {
+                    profilePanel.classList.add('translate-x-full');
+                }
+            });
+        }
+    </script>
+
+    <!-- Add padding so content does not hide under the fixed navbar -->
+    <div class="pt-16"></div>
+
+</body>
+</html>
