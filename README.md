@@ -1,121 +1,123 @@
 # Utility Billing Management System
 
-This project is a **Utility Billing Management System** designed for administrators to manage billing records, update billing dates, and send email notifications for unpaid bills. It also includes user-facing features for checking and paying bills.
+A comprehensive utility billing management platform with three distinct modules: Admin, User, and External portal.
 
----
+![Overview](git/Over_view.gif)
 
-## Features
+## 🚀 Features
 
-### Admin Features:
-- **Dashboard**: Overview of billing and user data.
-- **Update Billing Date**: Update the billing date for all records in the database.
-- **Send Due Emails**: Automatically send email reminders to users with unpaid bills.
-- **Manage Users**: View and manage user details.
-- **Generate Reports**: Generate billing and payment reports.
+### 1. Admin Module
+![Admin Dashboard](git/Admin.png)
+- **Dashboard**: Real-time analytics and statistics
+- **User Management**: View and manage user accounts
+- **Billing Management**: Update billing dates and monitor payments
+- **Email Notifications**: Send automated reminders for unpaid bills
+- **Report Generation**: Create detailed billing and payment reports
 
-### User Features:
-- **Check Bill Status**: Users can check the status of their water and electricity bills.
-- **Pay Bills**: Users can pay their bills online using dynamically generated payment links.
+### 2. User Module
+![Billing Interface](git/Billing.png)
+- **Bill Status**: Check water and electricity bill status
+- **Online Payments**: Secure payment processing via Razorpay
+- **Payment History**: View past transactions and download receipts
+- **Profile Management**: Update personal information
 
----
+### 3. External Module
+![External Portal](git/External.gif)
+- **Public Access**: View bills without registration
+- **Quick Pay**: One-time payment option
+- **Bill Verification**: Verify bill authenticity
 
-## Project Structure
+## 🛠️ Installation
 
-e:\projects\Santosh\socital_santhosh
-ª   .env
-ª   database.py
-ª   main.py
-ª   payment.py
-ª   README.md
-ª   requirements.txt
-ª   route.py
-ª
-+---static
-ª   +---images
-ª           electricity.jpeg
-ª           water.jpeg
-ª
-+---templates
-ª   +---admin
-ª   ª       bill_page.html
-ª   ª       index.html
-ª   ª       login.html
-ª   ª       update_date.html
-ª   ª       users.html
-ª   ª
-ª   +---external
-ª   ª       billing.html
-ª   ª
-ª   +---users
-ª           about.html
-ª           billingstatus.html
-ª           electricity_billing.html
-ª           footer.html
-ª           index.html
-ª           nav.html
-ª           pay.html
-ª           paymenthistory.html
-ª           register.html
-ª           services.html
-ª           water_billing.html
-
----
-
-## Installation
-
-### Prerequisites:
-- Python 3.8 or higher (recomended Python 3.10.11)
+### Prerequisites
+- Python 3.8+ (recommended: Python 3.10.11)
 - PostgreSQL
--fast API
-pip install -r requirements.txt
-### Steps:
-1. Clone the repository:
+- FastAPI
+
+### Setup Steps
+
+1. **Clone the Repository**
    ```bash
-   git clone https://github.com/crazyscriptright/utility-billing-system.git
+   git clone https://github.com/yourusername/utility-billing-system.git
    cd utility-billing-system
+   ```
 
-2. Install dependencies:
-pip install -r requirements.txt
+2. **Install Dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-3. Set up the .env file: Create a .env file in the root directory and add the following:
-RAZORPAY_KEY_ID="idsecret
-RAZORPAY_KEY_SECRET=secread key from rozar pay;
-DB_PASSWORD = "your-password"
-DB_HOST = "localhost"
-DB_PORT = "5432"
-NEW_DB = "Utility" 
-DB_USER = "use_name"
-EMAIL_USER=your_email@example.com
-EMAIL_PASSWORD=your_email_password
+3. **Environment Configuration**
+   Create a `.env` file in the root directory:
+   ```properties
+   # Razorpay Configuration
+   RAZORPAY_KEY_ID=#Add Razorpay key
+   RAZORPAY_KEY_SECRET=#ADD RazorPay Secret
 
-4. Run the application:
-uvicorn main:app --reload
+   # Database Configuration
+   DB_PASSWORD=#DB Password
+   DB_HOST=#Host Type
+   DB_PORT=#Port Number
+   NEW_DB="Utility"
+   DB_USER="postgres"
 
-5. Open the application in your browser:
-http://127.0.0.1:8000
+   # Email Configuration
+   sender_email="your-email@gmail.com"
+   sender_password="your-app-password"
+   ```
 
-## Default Credentials
+4. **Start the Application**
+   ```bash
+   uvicorn main:app --reload
+   ```
+   The application will be available at `http://127.0.0.1:8000`
 
-### Admin Account:
-- **Email**: admin@gmail.com
-- **Password**: 123456
+> **Note**: The database will be automatically created when you first run the application.
 
-### External User Account:
-- **Email**: external@gmail.com
-- **Password**: 123456
+## 🔑 Default Credentials
 
-> **Note**: Please change these default credentials after the first login for security purposes.
+### Admin Portal
+```
+URL: http://127.0.0.1:8000/admin
+Email: admin@gmail.com
+Password: 123456
+```
 
+### User Portal
+```
+URL: http://127.0.0.1:8000
+Email: user@gmail.com
+Password: 123456
+```
 
-Contact
-For any inquiries or support, please contact:
+### External Portal
+```
+URL: http://127.0.0.1:8000/external
+Email: external@gmail.com
+Password: 123456
+```
 
-Name: Anil          
-Email: Crazyscriptright@gmail.com
+## 📁 Project Structure
+```
+utility-billing-system/
+├── templates/
+│   ├── admin/         # Admin portal templates
+│   ├── users/         # User portal templates
+│   └── external/      # External portal templates
+├── static/
+│   └── images/        # Image assets
+├── main.py           # Application entry point
+├── database.py       # Database operations
+├── payment.py        # Payment processing
+└── route.py          # URL routing
+```
 
-contribution
-https://github.com/MubbassirKhan
+## 📫 Contact & Support
 
-License
+For support or queries:
+- **Email**: crazyscriptright@gmail.com
+- **GitHub**: [Utility Billing System](https://github.com/crazyscriptright/utility-billing-system)
+
+## 📄 License
+
 This project is licensed under the MIT License. See the LICENSE file for details.
-
